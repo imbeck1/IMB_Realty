@@ -1,7 +1,0 @@
-{
-  "name": "IMB-Realty-Client",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o wwwroot"
-  }
-}
