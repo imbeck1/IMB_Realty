@@ -13,7 +13,7 @@ public class GetHousesEndpoint : BaseAsyncEndpoint.WithoutRequest.WithResponse<G
         _context = context;
     }
 
-    [HttpGet("api/houses")] // Route that matches the client request
+    [HttpGet("api/houses")] // Route matching Blazor call
     public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(CancellationToken cancellationToken = default)
     {
         var houses = await _context.Houses.ToListAsync(cancellationToken);
@@ -33,4 +33,5 @@ public class GetHousesEndpoint : BaseAsyncEndpoint.WithoutRequest.WithResponse<G
         return Ok(response);
     }
 }
+
 
