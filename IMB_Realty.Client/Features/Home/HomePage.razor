@@ -1,8 +1,7 @@
 @page "/"
 @inject HttpClient Http
-@inject IMediator Mediator
 @inject NavigationManager NavManager
-@using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest 
+@using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest
 @using IMB_Realty.Client.Features.Home.Shared
 
 @if (_houses == null)
@@ -11,14 +10,16 @@
 }
 else
 {
-    <HouseDetails House ="_selectedHouse" />
+    <HouseDetails House="_selectedHouse" />
 
     <HouseSearch />
-    
+
     @if (_houses.Any())
     {
         <div class="mb-4">
-            <p class="font-italic text-center">Do you have an awesome house you'd like to share? <a href="add-house">Add it here</a>.</p>
+            <p class="font-italic text-center">
+                Do you have an awesome house you'd like to share? <a href="add-house">Add it here</a>.
+            </p>
         </div>
 
         <ViewSwitcher Items="_houses">
@@ -52,36 +53,41 @@ else
     else
     {
         <div class="no-houses">
-            <h3 class="text-muted font-weight-light">We currently don't have any houses, <a href="add-house">why not add one</a>?</h3>
+            <h3 class="text-muted font-weight-light">
+                We currently don't have any houses, <a href="add-house">why not add one</a>?
+            </h3>
         </div>
     }
 }
 
 @code {
-    private IEnumerable<House>? _houses;
+    private List<House> _houses = new();
     private House? _selectedHouse;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            var response = await Mediator.Send(new GetHousesRequest());
-            _houses = response.Houses.Select(x => new House
+            // Call the deployed API directly
+            var response = await Http.GetFromJsonAsync<GetHousesRequest.Response>("api/GetHousesEndpoint");
+            
+            // Initialize the list safely
+            _houses = response?.Houses.Select(x => new House
             {
                 Id = x.Id,
-                Name = x.Name, 
-                Image = x.Image,
-                Description = x.Description, 
-                Location = x.Location, 
-                Price = x.Price, 
-                Bedrooms = x.Bedrooms, 
-                Bathrooms = x.Bathrooms, 
+                Name = x.Name ?? string.Empty,
+                Image = x.Image ?? string.Empty,
+                Description = x.Description ?? string.Empty,
+                Location = x.Location ?? string.Empty,
+                Price = x.Price,
+                Bedrooms = x.Bedrooms,
+                Bathrooms = x.Bathrooms,
                 SquareFeet = x.SquareFeet
-            });
+            }).ToList() ?? new List<House>();
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"There was a problem loading house data: {ex.Message}");
+            Console.WriteLine($"Error loading house data: {ex.Message}");
         }
     }
 
