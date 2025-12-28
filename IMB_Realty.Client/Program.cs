@@ -9,6 +9,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri("https://imb-realty-api.azurewebsites.net/")
+    });
+
 
 await builder.Build().RunAsync();
 
