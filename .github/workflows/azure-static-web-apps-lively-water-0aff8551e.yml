@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD
+name: Azure Static Web Apps Deploy (Blazor + API)
 
 on:
   push:
@@ -12,44 +12,43 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    name: Build Blazor + API and Deploy
 
     steps:
-      # 1. Checkout the repo
+      # 1. Checkout repo
       - uses: actions/checkout@v3
 
       # 2. Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '6.0.x'  # Match your project
 
-      # 3. Restore dependencies for all projects
-      - name: Restore .NET Dependencies
+      # 3. Restore dependencies
+      - name: Restore .NET Projects
         run: |
           dotnet restore IMB_Realty.Shared/IMB_Realty.Shared.csproj
           dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
           dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 4. Build Blazor client
-      - name: Build Blazor WebAssembly Client
+      # 4. Build Blazor WebAssembly client
+      - name: Build Blazor Client
         run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
 
       # 5. Build API
       - name: Build API
         run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
 
-      # 6. Deploy to Azure Static Web Apps (upload pre-built artifacts)
+      # 6. Deploy to Azure Static Web App (upload only, no Oryx)
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "build_output/wwwroot"
-          api_location: "build_output/api"
-          output_location: ""
-
+          app_location: "build_output/wwwroot"  # Blazor client output
+          api_location: "build_output/api"      # API output
+          output_location: ""                    # Leave empty for prebuilt files
 
 
 
@@ -65,6 +64,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
