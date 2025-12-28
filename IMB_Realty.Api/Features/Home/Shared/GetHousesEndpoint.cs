@@ -3,33 +3,44 @@ using Microsoft.EntityFrameworkCore;
 using Ardalis.ApiEndpoints;
 using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest;
 
-
-public class GetHousesEndpoint : BaseAsyncEndpoint.WithRequest<int>.WithResponse<GetHousesRequest.Response>
+namespace IMB_Realty.Api.Endpoints
 {
-    private readonly IMB_RealtyContext _context;
-
-    public GetHousesEndpoint(IMB_RealtyContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GetHousesEndpoint : BaseAsyncEndpoint
+        .WithoutRequest
+        .WithResponse<GetHousesRequest.Response>
     {
-        _context = context;
-    }
+        private readonly IMB_RealtyContext _context;
 
-    [HttpGet(GetHousesRequest.RouteTemplate)]
-    public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(int houseId, CancellationToken cancellationToken = default)
-    {
-        var houses = await _context.Houses.ToListAsync(cancellationToken);
+        public GetHousesEndpoint(IMB_RealtyContext context)
+        {
+            _context = context;
+        }
 
-        var response = new GetHousesRequest.Response(houses.Select(house => new GetHousesRequest.House(
-            house.Id,
-            house.Name,
-            house.Image,
-            house.Location,
-            house.Price,
-            house.Description,
-            house.Bedrooms,
-            house.Bathrooms,
-            house.SquareFeet
-        )));
+        [HttpGet]
+        public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(
+            CancellationToken cancellationToken = default)
+        {
+            // Fetch all houses
+            var houses = await _context.Houses.ToListAsync(cancellationToken);
 
-        return Ok(response);
+            // Map to response DTOs
+            var response = new GetHousesRequest.Response(
+                houses.Select(house => new GetHousesRequest.House(
+                    house.Id,
+                    house.Name ?? string.Empty,
+                    house.Image ?? string.Empty,
+                    house.Location ?? string.Empty,
+                    house.Price,
+                    house.Description ?? string.Empty,
+                    house.Bedrooms,
+                    house.Bathrooms,
+                    house.SquareFeet
+                ))
+            );
+
+            return Ok(response);
+        }
     }
 }
