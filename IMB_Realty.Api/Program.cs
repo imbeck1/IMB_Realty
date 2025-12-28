@@ -7,13 +7,13 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-builder.Services.AddDbContext<IMB_RealtyContext>(
-    options => options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
+builder.Services.AddDbContext<IMB_RealtyContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
 
-builder.Services.AddControllers().AddFluentValidation(
-    fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
+builder.Services.AddControllers().AddFluentValidation(fv =>
+    fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
-// Configure CORS
+// Configure CORS for your deployed frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
@@ -36,11 +36,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// If you host Blazor files from API (optional)
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
+app.UseStaticFiles(new StaticFileOptions()
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
     RequestPath = "/Images"
@@ -48,12 +46,8 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseRouting();
 
-// Map controllers
 app.MapControllers();
-
-// Fallback route for SPA (optional)
 app.MapFallbackToFile("index.html");
 
 app.Run();
-
 
