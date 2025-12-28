@@ -6,28 +6,28 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<IMB_RealtyContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
+// Add services
+builder.Services.AddDbContext<IMB_RealtyContext>(
+    options => options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
 
-builder.Services.AddControllers()
-    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
+builder.Services.AddControllers().AddFluentValidation(
+    fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
     {
         policy
+            .WithOrigins("https://lively-water-0aff8551e.2.azurestaticapps.net") // your deployed frontend
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowAnyOrigin();
+            .AllowAnyMethod();
     });
 });
 
-// Build the app
 var app = builder.Build();
 
-// Configure middleware
+// Enable CORS **before routing**
 app.UseCors("AllowClient");
 
 if (app.Environment.IsDevelopment())
@@ -41,7 +41,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
     RequestPath = new Microsoft.AspNetCore.Http.PathString("/Images")
 });
 
