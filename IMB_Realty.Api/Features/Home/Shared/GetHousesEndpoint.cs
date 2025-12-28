@@ -3,44 +3,34 @@ using Microsoft.EntityFrameworkCore;
 using Ardalis.ApiEndpoints;
 using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest;
 
-namespace IMB_Realty.Api.Endpoints
+[ApiController]
+public class GetHousesEndpoint : BaseAsyncEndpoint.WithoutRequest.WithResponse<GetHousesRequest.Response>
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GetHousesEndpoint : BaseAsyncEndpoint
-        .WithoutRequest
-        .WithResponse<GetHousesRequest.Response>
+    private readonly IMB_RealtyContext _context;
+
+    public GetHousesEndpoint(IMB_RealtyContext context)
     {
-        private readonly IMB_RealtyContext _context;
+        _context = context;
+    }
 
-        public GetHousesEndpoint(IMB_RealtyContext context)
-        {
-            _context = context;
-        }
+    [HttpGet("api/houses")] // Route that matches the client request
+    public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(CancellationToken cancellationToken = default)
+    {
+        var houses = await _context.Houses.ToListAsync(cancellationToken);
 
-        [HttpGet]
-        public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(
-            CancellationToken cancellationToken = default)
-        {
-            // Fetch all houses
-            var houses = await _context.Houses.ToListAsync(cancellationToken);
+        var response = new GetHousesRequest.Response(houses.Select(house => new GetHousesRequest.House(
+            house.Id,
+            house.Name,
+            house.Image,
+            house.Location,
+            house.Price,
+            house.Description,
+            house.Bedrooms,
+            house.Bathrooms,
+            house.SquareFeet
+        )));
 
-            // Map to response DTOs
-            var response = new GetHousesRequest.Response(
-                houses.Select(house => new GetHousesRequest.House(
-                    house.Id,
-                    house.Name ?? string.Empty,
-                    house.Image ?? string.Empty,
-                    house.Location ?? string.Empty,
-                    house.Price,
-                    house.Description ?? string.Empty,
-                    house.Bedrooms,
-                    house.Bathrooms,
-                    house.SquareFeet
-                ))
-            );
-
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }
+
