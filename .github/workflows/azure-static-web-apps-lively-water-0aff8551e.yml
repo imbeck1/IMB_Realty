@@ -19,21 +19,31 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Build Blazor App
+        run: dotnet publish IMB_Realty.Client -c Release
+
       - name: Build And Deploy
-        id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+
+          # 👇 Skip Oryx build since we already pre-built
           skip_app_build: true
           skip_api_build: true
-          app_location: "IMB_Realty.Client" # App source code path
-          api_location: "IMB_Realty.Api" # Api source code path - optional
-          output_location: "wwwroot" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+
+          # 👇 Point to the publish wwwroot folder
+          app_location: "IMB_Realty.Client/bin/Release/net6.0/publish/wwwroot"
+          api_location: ""   # Optional: remove or set empty if you don't have Azure Functions
+          output_location: ""
+
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -46,5 +56,6 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
