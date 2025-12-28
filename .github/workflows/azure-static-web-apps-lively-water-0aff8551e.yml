@@ -15,34 +15,55 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
 
+      # 2️⃣ Setup .NET 6
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 6.0.x
 
-      - name: Build Blazor App
+      # 3️⃣ Setup Node.js (needed for Sass)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 4️⃣ Install npm packages for Blazor client
+      - name: Install npm packages
+        working-directory: IMB_Realty.Client
+        run: npm install
+
+      # 5️⃣ Build scoped Sass files
+      - name: Compile SCSS
+        working-directory: IMB_Realty.Client
+        run: |
+          npx sass Features/**/*.razor.scss Features/**/*.razor.css || echo "No SCSS files found"
+
+      # 6️⃣ Build .NET projects
+      - name: Build Blazor Client
         run: dotnet publish IMB_Realty.Client -c Release
 
-      - name: Build And Deploy
+      - name: Build API
+        run: dotnet publish IMB_Realty.Api -c Release
+
+      # 7️⃣ Deploy to Azure Static Web Apps
+      - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-
-          # 👇 Skip Oryx build since we already pre-built
-          skip_app_build: true
+          skip_app_build: true    # Skip Oryx build
           skip_api_build: true
-
-          # 👇 Point to the publish wwwroot folder
           app_location: "IMB_Realty.Client/bin/Release/net6.0/publish/wwwroot"
-          api_location: ""   # Optional: remove or set empty if you don't have Azure Functions
+          api_location: "IMB_Realty.Api/bin/Release/net6.0/publish"
           output_location: ""
+
 
 
   close_pull_request_job:
@@ -56,6 +77,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
