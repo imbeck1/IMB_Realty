@@ -13,41 +13,37 @@ builder.Services.AddDbContext<IMB_RealtyContext>(
 builder.Services.AddControllers().AddFluentValidation(
     fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
-// Configure CORS
+// Configure CORS: allow both local dev and deployed frontend
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowClient", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy
-            .WithOrigins("https://lively-water-0aff8551e.2.azurestaticapps.net") // your deployed frontend
+            .WithOrigins(
+                "https://lively-water-0aff8551e.2.azurestaticapps.net", // deployed frontend
+                "https://localhost:5001") // local frontend
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
-// Enable CORS **before routing**
-app.UseCors("AllowClient");
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseWebAssemblyDebugging();
-}
-
+// Middleware pipeline
 app.UseHttpsRedirection();
-
-app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
-    RequestPath = new Microsoft.AspNetCore.Http.PathString("/Images")
-});
+app.UseBlazorFrameworkFiles();
 
 app.UseRouting();
+
+// Apply CORS
+app.UseCors();
+
+app.UseAuthorization();
 
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
