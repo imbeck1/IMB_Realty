@@ -1,0 +1,92 @@
+@page "/"
+@inject HttpClient Http
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+@using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest 
+@using IMB_Realty.Client.Features.Home.Shared
+
+@if (_houses == null)
+{
+    <p>Loading Houses...</p>
+}
+else
+{
+    <HouseDetails House ="_selectedHouse" />
+
+    <HouseSearch />
+    
+    @if (_houses.Any())
+    {
+        <div class="mb-4">
+            <p class="font-italic text-center">Do you have an awesome house you'd like to share? <a href="add-house">Add it here</a>.</p>
+        </div>
+
+        <ViewSwitcher Items="_houses">
+            <GridTemplate>
+                <HouseCard House="context" OnSelected="HandleHouseSelected" />
+            </GridTemplate>
+            <HeaderTemplate>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Bedrooms</th>
+                <th>Bathrooms</th>
+                <th>Square Feet</th>
+            </HeaderTemplate>
+            <RowTemplate>
+                <th scope="col">@context.Name</th>
+                <td>@context.Location</td>
+                <td>@context.Bedrooms</td>
+                <td>@context.Bathrooms</td>
+                <td>@context.SquareFeet</td>
+                <td class="text-right">
+                    <button @onclick="@(() => HandleHouseSelected(context))" title="View" class="btn btn-primary">
+                        <i class="bi bi-binoculars"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-house/{context.Id}"))">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
+            </RowTemplate>
+        </ViewSwitcher>
+    }
+    else
+    {
+        <div class="no-houses">
+            <h3 class="text-muted font-weight-light">We currently don't have any houses, <a href="add-house">why not add one</a>?</h3>
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<House>? _houses;
+    private House? _selectedHouse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Mediator.Send(new GetHousesRequest());
+            _houses = response.Houses.Select(x => new House
+            {
+                Id = x.Id,
+                Name = x.Name, 
+                Image = x.Image,
+                Description = x.Description, 
+                Location = x.Location, 
+                Price = x.Price, 
+                Bedrooms = x.Bedrooms, 
+                Bathrooms = x.Bathrooms, 
+                SquareFeet = x.SquareFeet
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading house data: {ex.Message}");
+        }
+    }
+
+    private void HandleHouseSelected(House house)
+    {
+        _selectedHouse = house;
+    }
+}

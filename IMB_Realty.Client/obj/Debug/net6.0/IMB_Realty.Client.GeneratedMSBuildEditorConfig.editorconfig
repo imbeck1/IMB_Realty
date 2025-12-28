@@ -1,0 +1,105 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = IMB_Realty.Client
+build_property.RootNamespace = IMB_Realty.Client
+build_property.ProjectDir = C:\Users\Isaac\Desktop\blazorProject\IMB_Realty\IMB_Realty.Client\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Isaac\Desktop\blazorProject\IMB_Realty\IMB_Realty.Client
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 6.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/HomePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxIb21lUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/Search/SearchPage.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxTZWFyY2hcU2VhcmNoUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/Shared/HouseCard.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxTaGFyZWRcSG91c2VDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Layout/Header.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTGF5b3V0XEhlYWRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/AddHouse/AddHousePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXEFkZEhvdXNlXEFkZEhvdXNlUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/EditHouse/EditHousePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXEVkaXRIb3VzZVxFZGl0SG91c2VQYWdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/Shared/ErrorAlert.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXFNoYXJlZFxFcnJvckFsZXJ0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/Shared/FormFieldSet.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXFNoYXJlZFxGb3JtRmllbGRTZXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/Shared/HouseForm.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXFNoYXJlZFxIb3VzZUZvcm0ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/Shared/SuccessAlert.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXFNoYXJlZFxTdWNjZXNzQWxlcnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXF9JbXBvcnRzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/HouseSearch.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxIb3VzZVNlYXJjaC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-aaelcvvck6
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/Search/SearchFilter.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxTZWFyY2hcU2VhcmNoRmlsdGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-p2aej0n2a5
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/Shared/HouseDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxTaGFyZWRcSG91c2VEZXRhaWxzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-3q9c8bhfnv
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/Home/Shared/ViewSwitcher.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcSG9tZVxTaGFyZWRcVmlld1N3aXRjaGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-9saurwmcuu
+
+[C:/Users/Isaac/Desktop/blazorProject/IMB_Realty/IMB_Realty.Client/Features/ManageHouses/Shared/FormSection.razor]
+build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTWFuYWdlSG91c2VzXFNoYXJlZFxGb3JtU2VjdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-183qi520xj

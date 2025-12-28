@@ -1,0 +1,134 @@
+[
+    {
+        "id": 1,
+        "image": "houses/1.jpg",
+        "name": "English Dirby",
+        "price": 550000,
+        "location": "Charlotte, North Carolina",
+        "bedrooms": 5,
+        "bathrooms": 3,
+        "squarefeet": 2800,
+        "description": "Beautiful design, convenient for the modern age"
+    },
+    {
+        "id": 2,
+        "image": "houses/2.jpg",
+        "name": "Sweet Journey",
+        "price": 500000,
+        "location": "Knoxville, Tennessee",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "squarefeet": 2140,
+        "description": "Scenic views and convenient location near thriving nightlife."
+    },
+    {
+        "id": 3,
+        "image": "houses/3.jpg",
+        "name": "Complete Living",
+        "price": 300000,
+        "location": "Hickory, North Carolina",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "squarefeet": 1456,
+        "description": "Sturdy new construction completed in June by the most skilled craftsmen in the area."
+    },
+    {
+        "id": 4,
+        "image": "houses/4.jpg",
+        "name": "Elegant Teacher",
+        "price": 450000,
+        "location": "Morganton, North Carolina",
+        "bedrooms": 4,
+        "bathrooms": 2,
+        "squarefeet": 2105,
+        "description": "New take on the classic A-frame design. Built with all modern luxuries."
+    },
+    {
+        "id": 5,
+        "image": "houses/5.jpg",
+        "name": "Constant Bliss",
+        "price": 355000,
+        "location": "Charlotte, North Carolina",
+        "bedrooms": 6,
+        "bathrooms": 2,
+        "squarefeet": 1830,
+        "description": "Beautiful design, convenient for the modern age"
+    },
+    {
+        "id": 6,
+        "image": "houses/6.jpg",
+        "name": "Cute Living",
+        "price": 250000,
+        "location": "Charleston, South Carolina",
+        "bedrooms": 3,
+        "bathrooms": 4,
+        "squarefeet": 2140,
+        "description": "Scenic views and convenient location near thriving nightlife."
+    },
+    {
+        "id": 7,
+        "image": "houses/7.jpg",
+        "name": "Crying Politely",
+        "price": 300000,
+        "location": "Nashville, Tennessee",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "squarefeet": 1945,
+        "description": "Sturdy new construction completed in June by the most skilled craftsmen in the area."
+    },
+    {
+        "id": 8,
+        "image": "houses/8.jpg",
+        "name": "Show Pony",
+        "price": 500000,
+        "location": "Knoxville, Tennessee",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "squarefeet": 2125,
+        "description": "New take on the classic A-frame design. Built with all modern luxuries."
+    },
+    {
+        "id": 9,
+        "image": "houses/9.jpg",
+        "name": "Dirt Block",
+        "price": 400000,
+        "location": "Atlanta Georgia",
+        "bedrooms": 5,
+        "bathrooms": 2,
+        "squarefeet": 2800,
+        "description": "Beautiful design, convenient for the modern age"
+    },
+    {
+        "id": 10,
+        "image": "houses/10.jpg",
+        "name": "Fine Essence",
+        "price": 450000,
+        "location": "Raleigh, North Carolina",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "squarefeet": 2140,
+        "description": "Scenic views and convenient location near thriving nightlife."
+    },
+    {
+        "id": 11,
+        "image": "houses/11.jpg",
+        "name": "John Smith",
+        "price": 250000,
+        "location": "Richmond, Virgina",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "squarefeet": 1640,
+        "description": "Sturdy new construction completed in June by the most skilled craftsmen in the area."
+    },
+    {
+        "id": 12,
+        "image": "houses/12.jpg",
+        "name": "Monkeys on the Bed",
+        "price": 350000,
+        "location": "Morganton, North Carolina",
+        "bedrooms": 4,
+        "bathrooms": 2,
+        "squarefeet": 1105,
+        "description": "New take on the classic A-frame design. Built with all modern luxuries."
+    }
+]

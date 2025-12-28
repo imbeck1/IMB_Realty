@@ -1,0 +1,104 @@
+@page "/search/{SearchTerm}"
+@page "/search/{SearchTerm}/maxprice/{MaxPrice:int}"
+@inject HttpClient Http
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+@using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest 
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Home</a>
+        </li>
+    </ol>
+</nav>
+
+<PageTitle>Search Houses - IMB_Realty</PageTitle>
+
+<h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
+<SearchFilter SearchTerm="@SearchTerm" MaxPrice="MaxPrice" MinSqFt="MinSqFt" />
+
+@if (_searchResults == null)
+{
+    <p>Loading search results...</p>
+}
+else
+{
+    <HouseDetails House="_selectedHouse" />
+    <div class="grid">
+        @foreach (var house in _searchResults)
+        {
+            <HouseCard House="house" OnSelected="HandleHouseSelected" />
+        }
+    </div>
+}
+
+@code {
+    private IEnumerable<House>? _searchResults;
+    private House? _selectedHouse;
+
+    private IEnumerable<House> _cachedSearchResults = Array.Empty<House>();
+    [Parameter] public string SearchTerm { get; set; } = default!;
+
+    [Parameter, SupplyParameterFromQuery] public int? MaxPrice { get; set; }
+    [Parameter, SupplyParameterFromQuery] public int? MinSqFt { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Mediator.Send(new GetHousesRequest());
+            var allHouses = response.Houses.Select(x => new House
+            {
+                Id = x.Id,
+                Name = x.Name, 
+                Image = x.Image,
+                Description = x.Description, 
+                Location = x.Location, 
+                Price = x.Price, 
+                Bedrooms = x.Bedrooms, 
+                Bathrooms = x.Bathrooms, 
+                SquareFeet = x.SquareFeet
+            });
+
+            _searchResults = allHouses.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+            x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+
+            _cachedSearchResults = _searchResults;
+
+            UpdateFilters();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem loading House data: {ex.Message}");
+        }
+    }
+
+    protected override void OnParametersSet() => UpdateFilters();
+
+    private void HandleHouseSelected(House house) => _selectedHouse = house;
+
+    private void UpdateFilters()
+    {
+        var filters = new List<Func<House, bool>>();
+
+        if(MaxPrice is not null && MaxPrice > 0)
+        {
+            filters.Add(x => x.Price <= MaxPrice);
+        }
+
+        if(MinSqFt is not null && MinSqFt > 0)
+        {
+            filters.Add(x => x.SquareFeet >= MinSqFt);
+        }
+
+        if(filters.Any())
+        {
+            _searchResults = _cachedSearchResults.Where(house => filters.All(filter => filter(house)));
+        }
+        else
+        {
+            _searchResults = _cachedSearchResults;
+        }
+    }
+}

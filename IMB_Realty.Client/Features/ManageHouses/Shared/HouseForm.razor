@@ -1,0 +1,160 @@
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+    <FluentValidationValidator />
+
+    <!-- Basic Details Section -->
+    <FormSection Title="Basic Details" HelpText="Help someone find their dream home!">
+        <FormFieldSet Width="col-6">
+            <div class="form-group">
+                <label for="houseName" class="font-weight-bold text-secondary">Name</label>
+                <InputText @bind-Value="_house.Name" class="form-control" id="houseName" />
+                <ValidationMessage For="@(() => _house.Name)" />
+            </div>
+        </FormFieldSet>
+
+        <FormFieldSet>
+            <div class="form-group">
+                <label for="houseDescription" class="font-weight-bold text-secondary">Description</label>
+                <InputTextArea @bind-Value="_house.Description" rows="6" class="form-control" id="houseDescription" />
+                <ValidationMessage For="@(() => _house.Description)" />
+            </div>
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <div class="form-group">
+                <label for="houseLocation" class="font-weight-bold text-secondary">Location</label>
+                <InputText @bind-Value="_house.Location" class="form-control" id="houseLocation" />
+                <ValidationMessage For="@(() => _house.Location)" />
+            </div>
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <div class="form-group">
+                <label for="houseBedrooms" class="font-weight-bold text-secondary">Bedrooms</label>
+                <InputNumber @bind-Value="_house.Bedrooms" class="form-control" id="houseBedrooms" />
+                <ValidationMessage For="@(() => _house.Bedrooms)" />
+            </div>
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <div class="form-group">
+                <label for="houseBathrooms" class="font-weight-bold text-secondary">Bathrooms</label>
+                <InputNumber @bind-Value="_house.Bathrooms" class="form-control" id="houseBathrooms" />
+                <ValidationMessage For="@(() => _house.Bathrooms)" />
+            </div>
+        </FormFieldSet>
+
+        <FormFieldSet Width="col-6">
+            <div class="form-group">
+                <label for="houseSquareFeet" class="font-weight-bold text-secondary">Square Feet</label>
+                <InputNumber @bind-Value="_house.SquareFeet" class="form-control" id="houseSquareFeet" />
+                <ValidationMessage For="@(() => _house.SquareFeet)" />
+            </div>
+        </FormFieldSet>
+    </FormSection>
+
+    <!-- Price Section -->
+    <FormSection Title="Price" HelpText="Post your house at a price that's right for you!">
+        <FormFieldSet Width="col-3">
+            <label for="housePrice" class="font-weight-bold text-secondary">Price</label>
+            <InputNumber @bind-Value="_house.Price" class="form-control" id="housePrice" />
+            <ValidationMessage For="@(() => _house.Price)" />
+        </FormFieldSet>
+    </FormSection>
+
+    <!-- Image Section -->
+    <FormSection Title="Image" HelpText="Upload a picture of your house">
+        <FormFieldSet Width="col-6">
+            <label for="houseImage" class="font-weight-bold text-secondary">Image</label>
+            @if (string.IsNullOrWhiteSpace(_house.Image))
+            {
+                <InputFile OnChange="LoadHouseImage" class="form-control-file" id="houseImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+                <div class="card bg-dark text-white">
+                    <img src="images/@_house.Image" class="img-fluid" />
+                    <div class="card-img-overlay">
+                        <button class="btn btn-primary btn-sm" type="button" @onclick="RemoveHouseImage">Remove</button>
+                    </div>
+                </div>
+            }
+        </FormFieldSet>
+    </FormSection>
+
+    <!-- Form Actions -->
+    <div class="mt-4 mb-5">
+        <div class="row">
+            <div class="offset-10 col-8 text-right">
+                <button class="btn btn-outline-secondary" type="button" @onclick="ResetForm">Reset</button>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private HouseDto _house = new HouseDto();
+    private IBrowserFile? _houseImage;
+    private EditContext _editContext = default!;
+
+    [Parameter] public Func<HouseDto, IBrowserFile?, Task>? OnSubmit { get; set; }
+    [Parameter] public HouseDto? House { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _editContext = new EditContext(_house);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (House != null)
+        {
+            _house = new HouseDto
+            {
+                Id = House.Id,
+                Name = House.Name,
+                Description = House.Description,
+                Location = House.Location,
+                Image = House.Image,
+                ImageAction = House.ImageAction,
+                Bedrooms = House.Bedrooms,
+                Bathrooms = House.Bathrooms,
+                SquareFeet = House.SquareFeet,
+                Price = House.Price
+            };
+        }
+
+        _editContext = new EditContext(_house);
+    }
+
+    private async Task SubmitForm()
+    {
+        if (OnSubmit != null)
+        {
+            await OnSubmit(_house, _houseImage);
+        }
+        else
+        {
+            Console.Error.WriteLine("HouseForm: OnSubmit parameter is not set!");
+        }
+    }
+
+    private void LoadHouseImage(InputFileChangeEventArgs e)
+    {
+        _houseImage = e.File;
+        _house.ImageAction = ImageAction.Add;
+    }
+
+    private void RemoveHouseImage()
+    {
+        _house.Image = null;
+        _house.ImageAction = ImageAction.Remove;
+    }
+
+    public void ResetForm()
+    {
+        _house = new HouseDto();
+        _houseImage = null;
+        _editContext = new EditContext(_house);
+    }
+}

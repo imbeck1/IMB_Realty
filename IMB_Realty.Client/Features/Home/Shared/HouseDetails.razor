@@ -1,0 +1,63 @@
+@inject NavigationManager NavManager
+
+<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
+    <div class="drawer-mask"></div>
+    <div class="drawer">
+        @if (_activeHouse is not null)
+        {
+            <div class="drawer-content">
+                <img src="@(!string.IsNullOrWhiteSpace(_activeHouse.Image) ? $"images/{_activeHouse.Image}" : "https://placehold.co/640x426.jpg?text=No+Image+For+House")" />
+                <div class="trail-details">
+                    <h4>@_activeHouse.Name</h4>
+                    <h3>$@_activeHouse.Price.ToString("N0")</h3>
+                    <h6 class="mb-3 text-muted">
+                        @_activeHouse.Location
+                    </h6>
+                    <div class="mt-4">
+                        <span class="mr-5">
+                            @_activeHouse.Bedrooms <strong>Beds</strong>
+                        </span>
+                        <span class="mr-5">
+                            @_activeHouse.Bathrooms <strong>Bath</strong>
+                        </span>
+                        <span class="mr-5">
+                            @_activeHouse.SquareFeet <strong>Sq Ft</strong>
+                        </span>
+                    </div>
+                    <p class="mt-4">@_activeHouse.Description</p>
+                </div>
+            </div>
+            <div class="drawer-controls d-flex justify-content-between">
+                <button class="btn btn-primary" @onclick="Close">Close</button>
+                <button class="btn btn-outline-secondary" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-house/{House.Id}"))">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
+            
+            
+        }
+    </div>
+</div>
+
+@code {
+    private bool _isOpen;
+    private House? _activeHouse;
+
+    [Parameter, EditorRequired]
+    public House? House { get; set;}
+
+    protected override void OnParametersSet()
+    {
+        if(House != null)
+        {
+            _activeHouse = House;
+            _isOpen = true;
+        }
+    }
+
+    private void Close()
+    {
+        _activeHouse = null;
+        _isOpen = false;
+    }
+}

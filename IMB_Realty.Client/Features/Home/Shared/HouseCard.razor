@@ -1,0 +1,39 @@
+@inject NavigationManager NavManager
+
+<div class="card shadow" style="max-width: 18rem;">
+    <img src="@(!string.IsNullOrWhiteSpace(House.Image) ? $"images/{House.Image}" : "https://placehold.co/286x190.jpg?text=No+Image+For+House")" class="card-img-top">
+    <div class="card-body">
+        <h5 class="card-title">@House.Name</h5>
+        <h4 class="card-title">$@House.Price.ToString("N0")</h4>
+        <h6 class="card-subtitle mb-3 text-muted">
+            @House.Location
+        </h6>
+        <div class="d-flex justify-content-between" style="margin-bottom: 1em;">
+            <span>
+                @House.Bedrooms <strong>Beds</strong>
+            </span>
+            <span>
+                @House.Bathrooms <strong>Bath</strong>
+            </span>
+            <span>
+                @House.SquareFeet <strong>Sq Ft</strong>
+            </span>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(House))">
+                <i class="bi bi-binoculars"></i>
+            </button>
+            <button class="btn btn-outline-secondary" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-house/{House.Id}"))">
+                <i class="bi bi-pencil"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public House House { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public EventCallback<House> OnSelected { get; set; }
+}

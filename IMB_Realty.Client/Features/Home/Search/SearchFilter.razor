@@ -1,0 +1,45 @@
+@inject NavigationManager NavManager
+
+<div class="filters">
+    <label for="maxPrice">Max Price</label>
+    <input id="maxPrice" type="number" class="form-control" @bind="_maxPrice" />
+    <label for="minSqFt">Min Square Feet</label>
+    <input id="minSqFt" type="number" class="form-control" @bind="_minSqFt" />
+    <button class="btn btn-outline-primary" @onclick="FilterSearchResults">Filter</button>
+    <button class="btn btn-outline-primary" @onclick="ClearSearchFilter">Clear</button>
+    
+</div>
+
+@code{
+    private int _maxPrice;
+    private int _minSqFt;
+
+    [Parameter, EditorRequired]
+    public string SearchTerm { get; set; } = default!;
+
+    [Parameter] public int? MaxPrice { get; set; }
+    [Parameter] public int? MinSqFt { get; set; }
+
+    private void FilterSearchResults()
+    {
+        var uriWithQuerystring = NavManager.GetUriWithQueryParameters(new Dictionary<string, object?>()
+        {
+            [nameof(SearchPage.MaxPrice)] = _maxPrice == 0 ? null : _maxPrice,
+            [nameof(SearchPage.MinSqFt)] = _minSqFt == 0 ? null : _minSqFt
+        });
+
+        NavManager.NavigateTo(uriWithQuerystring);
+    }
+
+    private void ClearSearchFilter()
+    {
+        _maxPrice = 0;
+        NavManager.NavigateTo($"/search/{SearchTerm}");
+    }
+
+    protected override void OnInitialized()
+    {
+        _maxPrice = MaxPrice ?? 0;
+        _minSqFt = MinSqFt ?? 0;
+    }
+}

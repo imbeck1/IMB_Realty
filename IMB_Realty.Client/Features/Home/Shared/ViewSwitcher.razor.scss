@@ -1,0 +1,30 @@
+.grid {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    column-gap: clamp(1rem, 5vw, 6rem);
+    row-gap: clamp(1rem, 3vw, 4rem);
+}
+
+table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+
+    ::deep th, ::deep td {
+        padding: .75rem;
+        vertical-align: middle;
+    }
+
+    ::deep thead tr th {
+        border-bottom: 4px solid var(--brand);
+        border-top: none;
+    }
+
+    ::deep tbody tr:nth-of-type(odd) {
+        background-color: rgba(0,0,0,.05);
+    }
+}

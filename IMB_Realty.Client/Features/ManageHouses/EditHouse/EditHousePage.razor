@@ -1,0 +1,132 @@
+@page "/edit-house/{HouseId:int}"
+@inject IMediator Mediator
+
+<PageTitle>Edit House - IMB_Realty</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit House</li>
+    </ol>
+</nav>
+
+@if (_isLoading)
+{
+    <p>Loading House...</p>
+}
+else if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+else
+{
+    <h3 class="mt-5 mb-4">Editing House: @_house.Name</h3>
+
+    @if (_submitSuccessful)
+    {
+        <SuccessAlert Message="Your house has been edited successfully!" />
+    }
+
+    <HouseForm House="_house" OnSubmit="SubmitEditHouse" @ref="_houseForm" />
+}
+
+@code {
+    private bool _isLoading = true;
+    private bool _submitSuccessful;
+    private string? _errorMessage;
+    private HouseForm _houseForm = default!;
+    private HouseDto _house = new HouseDto();
+
+    [Parameter] public int HouseId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await Mediator.Send(new GetHouseRequest(HouseId));
+
+            if (response?.House is null)
+            {
+                _errorMessage = "There was a problem loading the house.";
+            }
+            else
+            {
+                _house = new HouseDto
+                {
+                    Id = response.House.Id,
+                    Name = response.House.Name ?? string.Empty,
+                    Description = response.House.Description ?? string.Empty,
+                    Location = response.House.Location ?? string.Empty,
+                    Image = response.House.Image ?? string.Empty,
+                    Price = response.House.Price,
+                    Bedrooms = response.House.Bedrooms,
+                    Bathrooms = response.House.Bathrooms,
+                    SquareFeet = response.House.SquareFeet,
+                    ImageAction = ImageAction.None
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"An error occurred while loading the house: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SubmitEditHouse(HouseDto house, IBrowserFile? image)
+    {
+        _submitSuccessful = false;
+        _errorMessage = null;
+
+        try
+        {
+            // Handle image upload first, if needed
+            if (house.ImageAction == ImageAction.Add && image is not null)
+            {
+                var uploadResponse = await Mediator.Send(new UploadHouseImageRequest(house.Id, image));
+                if (!string.IsNullOrWhiteSpace(uploadResponse.ImageName))
+                {
+                    house.Image = uploadResponse.ImageName;
+                }
+                else
+                {
+                    _errorMessage = "House saved but image upload failed.";
+                    return;
+                }
+            }
+
+            // Send the full house update
+            var response = await Mediator.Send(new EditHouseRequest(house));
+
+            if (!response.IsSuccess)
+            {
+                _errorMessage = "There was a problem saving your house.";
+                return;
+            }
+
+            // Update local _house
+            _house.Name = house.Name;
+            _house.Description = house.Description;
+            _house.Location = house.Location;
+            _house.Price = house.Price;
+            _house.Bedrooms = house.Bedrooms;
+            _house.Bathrooms = house.Bathrooms;
+            _house.SquareFeet = house.SquareFeet;
+            _house.Image = house.Image;
+            _house.ImageAction = ImageAction.None;
+
+            _submitSuccessful = true;
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"An error occurred while saving the house: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+}
+
+
