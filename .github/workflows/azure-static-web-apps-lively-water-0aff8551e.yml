@@ -11,17 +11,21 @@ on:
 
 jobs:
   build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
       # 1. Checkout the repo
       - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
 
       # 2. Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '6.0.x'   # Match your project framework
 
       # 3. Restore dependencies
       - name: Restore .NET Dependencies
@@ -30,28 +34,24 @@ jobs:
           dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
           dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 4. Publish Blazor WebAssembly client
-      - name: Publish Blazor Client
-        run: |
-          dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
+      # 4. Build Blazor client
+      - name: Build Blazor Client
+        run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
 
-      # 5. Publish API
-      - name: Publish API
-        run: |
-          dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
+      # 5. Build API
+      - name: Build API
+        run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
 
-      # 6. Deploy to Azure SWA
+      # 6. Deploy to Azure Static Web Apps
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "build_output/wwwroot"  # prebuilt Blazor output
-          api_location: "build_output/api"     # prebuilt API
-          output_location: ""                  # already in publish folder
-
-
+          app_location: "build_output/wwwroot"
+          api_location: "build_output/api"
+          output_location: ""
 
 
 
@@ -66,6 +66,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
