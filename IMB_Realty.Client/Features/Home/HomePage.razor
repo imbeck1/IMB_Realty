@@ -11,14 +11,14 @@
 else
 {
     <HouseDetails House="_selectedHouse" />
-
     <HouseSearch />
 
     @if (_houses.Any())
     {
         <div class="mb-4">
             <p class="font-italic text-center">
-                Do you have an awesome house you'd like to share? <a href="add-house">Add it here</a>.
+                Do you have an awesome house you'd like to share? 
+                <a href="add-house">Add it here</a>.
             </p>
         </div>
 
@@ -43,7 +43,8 @@ else
                     <button @onclick="@(() => HandleHouseSelected(context))" title="View" class="btn btn-primary">
                         <i class="bi bi-binoculars"></i>
                     </button>
-                    <button class="btn btn-outline-secondary" title="Edit" @onclick="@(() => NavManager.NavigateTo($"/edit-house/{context.Id}"))">
+                    <button class="btn btn-outline-secondary" title="Edit" 
+                            @onclick="@(() => NavManager.NavigateTo($"/edit-house/{context.Id}"))">
                         <i class="bi bi-pencil"></i>
                     </button>
                 </td>
@@ -61,29 +62,27 @@ else
 }
 
 @code {
-    private List<House> _houses = new();
+    private IEnumerable<House>? _houses;
     private House? _selectedHouse;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Call the deployed API directly
-            var response = await Http.GetFromJsonAsync<GetHousesRequest.Response>("api/GetHousesEndpoint");
-            
-            // Initialize the list safely
+            // Call the API endpoint
+            var response = await Http.GetFromJsonAsync<GetHousesRequest.Response>("api/houses");
             _houses = response?.Houses.Select(x => new House
             {
                 Id = x.Id,
-                Name = x.Name ?? string.Empty,
-                Image = x.Image ?? string.Empty,
-                Description = x.Description ?? string.Empty,
-                Location = x.Location ?? string.Empty,
+                Name = x.Name,
+                Image = x.Image,
+                Description = x.Description,
+                Location = x.Location,
                 Price = x.Price,
                 Bedrooms = x.Bedrooms,
                 Bathrooms = x.Bathrooms,
                 SquareFeet = x.SquareFeet
-            }).ToList() ?? new List<House>();
+            });
         }
         catch (HttpRequestException ex)
         {
@@ -96,3 +95,4 @@ else
         _selectedHouse = house;
     }
 }
+
