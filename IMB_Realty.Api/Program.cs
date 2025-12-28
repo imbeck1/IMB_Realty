@@ -11,6 +11,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<IMB_RealtyContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+    });
+});
+
+app.UseCors("AllowClient");
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
