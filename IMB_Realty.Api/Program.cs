@@ -7,9 +7,11 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddDbContext<IMB_RealtyContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
-builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
+builder.Services.AddDbContext<IMB_RealtyContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
+
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
 builder.Services.AddCors(options =>
 {
@@ -22,10 +24,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-app.UseCors("AllowClient");
-
-
+// Build the app
 var app = builder.Build();
+
+// Configure middleware
+app.UseCors("AllowClient");
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,11 +38,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
-
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
     RequestPath = new Microsoft.AspNetCore.Http.PathString("/Images")
 });
 
