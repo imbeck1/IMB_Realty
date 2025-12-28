@@ -1,32 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-
-    <!-- Used only to avoid repeated npm installs locally -->
-    <NpmLastInstall>node_modules/.last-install</NpmLastInstall>
   </PropertyGroup>
 
-  <!-- Blazor -->
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"
-                      Version="6.0.0"
-                      PrivateAssets="all" />
-  </ItemGroup>
-
-  <!-- App packages -->
-  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.0.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
   </ItemGroup>
 
-  <!-- Shared project -->
   <ItemGroup>
     <ProjectReference Include="..\IMB_Realty.Shared\IMB_Realty.Shared.csproj" />
   </ItemGroup>
 
+  <!-- SCSS compilation removed entirely -->
 </Project>
