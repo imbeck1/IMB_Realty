@@ -1,4 +1,4 @@
-name: Build and Deploy Blazor + API to Azure Static Web Apps
+name: Build and Deploy Blazor + API
 
 on:
   push:
@@ -12,44 +12,39 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    name: Build and Deploy
 
     steps:
-      # 1. Checkout repository
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      # 1. Checkout repo
+      - uses: actions/checkout@v3
 
       # 2. Setup .NET SDK
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'  # Match your project target
+          dotnet-version: '6.0.x'
 
       # 3. Restore all projects
-      - name: Restore .NET projects
-        run: |
+      - run: |
           dotnet restore IMB_Realty.Shared/IMB_Realty.Shared.csproj
           dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
           dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 4. Build Blazor client
-      - name: Build Blazor WebAssembly client
-        run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
+      # 4. Build Blazor client to wwwroot
+      - run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
 
-      # 5. Build API
-      - name: Build API
-        run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
+      # 5. Build API to build_output/api
+      - run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
 
-      # 6. Deploy to Azure Static Web Apps
-      - name: Deploy to Azure Static Web Apps
+      # 6. Deploy pre-built artifacts
+      - name: Deploy pre-built app + API
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "build_output/wwwroot"  # Blazor pre-built output
-          api_location: "build_output/api"     # API pre-built output
-          output_location: ""                   # leave empty because we’re using the pre-built wwwroot
+          app_location: "build_output/wwwroot"
+          api_location: "build_output/api"
+          output_location: ""           # leave empty
+          #### This is key: no Oryx build commands are run
 
 
 
@@ -64,6 +59,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
