@@ -11,54 +11,46 @@ on:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
       # 1. Checkout the repo
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
 
       # 2. Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'   # Match your project framework
+          dotnet-version: '6.0.x'
 
-      # 3. Install Node.js (for SCSS compilation if needed)
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'   # latest LTS is fine
-
-      # 4. Restore .NET dependencies
+      # 3. Restore dependencies
       - name: Restore .NET Dependencies
         run: |
           dotnet restore IMB_Realty.Shared/IMB_Realty.Shared.csproj
           dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
           dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 5. Optional: Compile SCSS for Blazor client
-      - name: Compile SCSS (optional)
-        working-directory: IMB_Realty.Client
+      # 4. Publish Blazor WebAssembly client
+      - name: Publish Blazor Client
         run: |
-          if [ -f package.json ]; then
-            npm install
-            npx sass Features/**/*.razor.scss Features/**/*.razor.css || echo "SCSS compilation failed"
-          fi
+          dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
 
-      # 6. Build and deploy using Azure Static Web Apps action
-      - name: Build and Deploy to Azure Static Web App
+      # 5. Publish API
+      - name: Publish API
+        run: |
+          dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
+
+      # 6. Deploy to Azure SWA
+      - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "IMB_Realty.Client"  # Blazor client source folder
-          api_location: "IMB_Realty.Api"    # API project folder
-          output_location: "wwwroot"         # Blazor build output relative to client
+          app_location: "build_output/wwwroot"  # prebuilt Blazor output
+          api_location: "build_output/api"     # prebuilt API
+          output_location: ""                  # already in publish folder
+
 
 
 
@@ -74,6 +66,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
