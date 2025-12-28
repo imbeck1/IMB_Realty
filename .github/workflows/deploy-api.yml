@@ -1,0 +1,41 @@
+name: Deploy ASP.NET Core API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_api:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - uses: actions/checkout@v3
+
+      # 2. Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
+      # 3. Restore dependencies
+      - name: Restore
+        run: |
+          dotnet restore IMB_Realty.Shared/IMB_Realty.Shared.csproj
+          dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
+
+      # 4. Publish API
+      - name: Publish API
+        run: |
+          dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj \
+            -c Release \
+            -o api_publish
+
+      # 5. Deploy to Azure App Service
+      - name: Deploy API
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: imb-realty-api
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+          package: api_publish
