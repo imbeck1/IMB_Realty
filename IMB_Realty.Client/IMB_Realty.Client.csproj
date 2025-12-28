@@ -29,43 +29,4 @@
     <ProjectReference Include="..\IMB_Realty.Shared\IMB_Realty.Shared.csproj" />
   </ItemGroup>
 
-  <!-- Watch SCSS, but don't treat compiled CSS as watched assets -->
-  <ItemGroup>
-    <Watch Include="**/*.scss" />
-    <None Update="**/*.css" Watch="false" />
-  </ItemGroup>
 
-  <!-- ===================== -->
-  <!-- NPM / SCSS PIPELINE   -->
-  <!-- ===================== -->
-
-  <!-- Only require npm locally -->
-  <Target Name="CheckForNpm"
-          Condition="'$(CI)' != 'true'"
-          BeforeTargets="RunNpmInstall">
-    <Exec Command="npm --version" ContinueOnError="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-    </Exec>
-    <Error Condition="'$(ErrorCode)' != '0'"
-           Text="NPM is required to build this project locally." />
-  </Target>
-
-  <!-- Only run npm install locally -->
-  <Target Name="RunNpmInstall"
-          Condition="'$(CI)' != 'true'"
-          Inputs="package.json"
-          Outputs="$(NpmLastInstall)"
-          BeforeTargets="CompileScopedScss">
-    <Exec Command="npm install" />
-    <Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
-  </Target>
-
-  <!-- Compile scoped SCSS -->
-  <Target Name="CompileScopedScss" BeforeTargets="Compile">
-    <ItemGroup>
-      <ScopedScssFiles Include="Features/**/*.razor.scss" />
-    </ItemGroup>
-    <Exec Command="npx sass %(ScopedScssFiles.Identity) %(RelativeDir)%(Filename).css" />
-  </Target>
-
-</Project>
