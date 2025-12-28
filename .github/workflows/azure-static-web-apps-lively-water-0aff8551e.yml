@@ -1,13 +1,9 @@
-name: Build and Deploy Blazor + API
+name: Deploy Blazor + API (pre-built)
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize, reopened]
 
 jobs:
   build_and_deploy:
@@ -22,19 +18,19 @@ jobs:
         with:
           dotnet-version: '6.0.x'
 
-      # 3. Restore all projects
+      # 3. Restore dependencies
       - run: |
           dotnet restore IMB_Realty.Shared/IMB_Realty.Shared.csproj
           dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
           dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 4. Build Blazor client to wwwroot
+      # 4. Publish Blazor client to pre-built folder
       - run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
 
-      # 5. Build API to build_output/api
+      # 5. Publish API to pre-built folder
       - run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
 
-      # 6. Deploy pre-built artifacts
+      # 6. Upload pre-built artifacts (no Oryx, no Node)
       - name: Deploy pre-built app + API
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -43,8 +39,8 @@ jobs:
           action: "upload"
           app_location: "build_output/wwwroot"
           api_location: "build_output/api"
-          output_location: ""           # leave empty
-          #### This is key: no Oryx build commands are run
+          output_location: ""  # leave empty
+
 
 
 
@@ -59,6 +55,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
