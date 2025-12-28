@@ -15,53 +15,61 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      # 1️⃣ Checkout code
+      # 1. Checkout the repo
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
 
-      # 2️⃣ Setup .NET
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          dotnet-version: 6.0.x
+          node-version: '18'
 
-      # 3️⃣ Install temporary Sass to compile SCSS
-      - name: Install Sass
-        run: npm install -g sass
+      # 3. Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
 
-      # 4️⃣ Compile only changed SCSS files
-      - name: Compile Changed SCSS Files
+      # 4. Restore .NET dependencies
+      - name: Restore .NET dependencies
         run: |
-          # List all SCSS files changed in this commit
-          git diff --name-only HEAD~1 HEAD | grep '\.razor\.scss$' || exit 0
-          
-          for file in $(git diff --name-only HEAD~1 HEAD | grep '\.razor\.scss$'); do
-            css_file="${file%.scss}.css"
-            echo "Compiling $file -> $css_file"
-            sass "$file" "$css_file"
-          done
+          dotnet restore IMB_Realty.Client/IMB_Realty.Client.csproj
+          dotnet restore IMB_Realty.Api/IMB_Realty.Api.csproj
 
-      # 5️⃣ Build Blazor Client
-      - name: Build Blazor Client
-        run: dotnet publish IMB_Realty.Client -c Release
+      # 5. Only install NPM if package.json changed
+      - name: Install NPM dependencies
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        working-directory: IMB_Realty.Client
+        run: |
+          if [ -f package.json ]; then npm ci; fi
 
-      # 6️⃣ Build API
+      # 6. Compile SCSS only if any SCSS changed
+      - name: Compile SCSS
+        working-directory: IMB_Realty.Client
+        run: |
+          SCSS_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- Features/**/*.scss)
+          if [ -n "$SCSS_CHANGED" ]; then npx sass Features:Features --no-source-map; fi
+
+      # 7. Build frontend
+      - name: Build Blazor WebAssembly
+        run: dotnet publish IMB_Realty.Client/IMB_Realty.Client.csproj -c Release -o build_output/wwwroot
+
+      # 8. Build API
       - name: Build API
-        run: dotnet publish IMB_Realty.Api -c Release
+        run: dotnet publish IMB_Realty.Api/IMB_Realty.Api.csproj -c Release -o build_output/api
 
-      # 7️⃣ Deploy to Azure Static Web Apps
-      - name: Deploy to Azure Static Web Apps
+      # 9. Deploy to Azure Static Web Apps
+      - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          skip_app_build: true       # Skip Oryx
-          skip_api_build: true
-          app_location: "IMB_Realty.Client/bin/Release/net6.0/publish/wwwroot"
-          api_location: "IMB_Realty.Api/bin/Release/net6.0/publish"
+          app_location: "build_output/wwwroot"
+          api_location: "build_output/api"
           output_location: ""
 
 
@@ -78,6 +86,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_WATER_0AFF8551E }}
           action: "close"
+
 
 
 
