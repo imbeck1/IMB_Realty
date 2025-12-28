@@ -12,7 +12,7 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 builder.Services.AddScoped(sp =>
     new HttpClient
     {
-        BaseAddress = new Uri("https://imb-realty-api.azurewebsites.net/")
+        BaseAddress = new Uri("imb-realty-api-hjh2a2d8heangac3.canadacentral-01.azurewebsites.net")
     });
 
 
