@@ -1,40 +1,71 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
- <PropertyGroup>
-  <TargetFramework>net6.0</TargetFramework>
-  <Nullable>enable</Nullable>
-  <ImplicitUsings>enable</ImplicitUsings>
-  <NpmLastInstall>node_modules/.last-install</NpmLastInstall>
- </PropertyGroup>
- <ItemGroup>
- <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
- <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
- </ItemGroup>
- <ItemGroup>
- <Watch Include="**/*.scss" />
- <None Update="**/*.css" Watch="false" />
- </ItemGroup>
- <ItemGroup>
-   <ProjectReference Include="..\IMB_Realty.Shared\IMB_Realty.Shared.csproj" />
- </ItemGroup>
- <Target Name="CheckForNpm" BeforeTargets="RunNpmInstall">
- <Exec Command="npm --version" ContinueOnError="true">
- <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
- </Exec>
- <Error Condition="'$(ErrorCode)' != '0'" Text="NPM is required to build this project." />
- </Target>
- <Target Name="RunNpmInstall" BeforeTargets="CompileScopedScss" Inputs="package.json" Outputs="$(NpmLastInstall)">
- <Exec Command="npm install" />
- <Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
- </Target>
- <Target Name="CompileScopedScss" BeforeTargets="Compile">
- <ItemGroup>
- <ScopedScssFiles Include="Features/**/*.razor.scss" />
- </ItemGroup>
- <Exec Command="npx sass %(ScopedScssFiles.Identity) %(relativedir)%(filename).css" />
- </Target>
- <ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Used only to avoid repeated npm installs locally -->
+    <NpmLastInstall>node_modules/.last-install</NpmLastInstall>
+  </PropertyGroup>
+
+  <!-- Blazor -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"
+                      Version="6.0.0"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- App packages -->
+  <ItemGroup>
     <PackageReference Include="Blazored.FluentValidation" Version="2.0.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
   </ItemGroup>
+
+  <!-- Shared project -->
+  <ItemGroup>
+    <ProjectReference Include="..\IMB_Realty.Shared\IMB_Realty.Shared.csproj" />
+  </ItemGroup>
+
+  <!-- Watch SCSS, but don't treat compiled CSS as watched assets -->
+  <ItemGroup>
+    <Watch Include="**/*.scss" />
+    <None Update="**/*.css" Watch="false" />
+  </ItemGroup>
+
+  <!-- ===================== -->
+  <!-- NPM / SCSS PIPELINE   -->
+  <!-- ===================== -->
+
+  <!-- Only require npm locally -->
+  <Target Name="CheckForNpm"
+          Condition="'$(CI)' != 'true'"
+          BeforeTargets="RunNpmInstall">
+    <Exec Command="npm --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'"
+           Text="NPM is required to build this project locally." />
+  </Target>
+
+  <!-- Only run npm install locally -->
+  <Target Name="RunNpmInstall"
+          Condition="'$(CI)' != 'true'"
+          Inputs="package.json"
+          Outputs="$(NpmLastInstall)"
+          BeforeTargets="CompileScopedScss">
+    <Exec Command="npm install" />
+    <Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
+  </Target>
+
+  <!-- Compile scoped SCSS -->
+  <Target Name="CompileScopedScss" BeforeTargets="Compile">
+    <ItemGroup>
+      <ScopedScssFiles Include="Features/**/*.razor.scss" />
+    </ItemGroup>
+    <Exec Command="npx sass %(ScopedScssFiles.Identity) %(RelativeDir)%(Filename).css" />
+  </Target>
+
 </Project>
