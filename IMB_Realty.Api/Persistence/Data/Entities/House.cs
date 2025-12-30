@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+namespace IMB_Realty.Api.Persistence.Data.Entities;
+
+
 public class House
 {
     public int Id
