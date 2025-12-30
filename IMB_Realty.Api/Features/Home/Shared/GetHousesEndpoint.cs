@@ -1,10 +1,12 @@
+using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Ardalis.ApiEndpoints;
 using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest;
 
-[ApiController]
-public class GetHousesEndpoint : BaseAsyncEndpoint.WithoutRequest.WithResponse<GetHousesRequest.Response>
+[Route("api/houses")]
+public class GetHousesEndpoint 
+    : BaseAsyncEndpoint.WithoutRequest
+        .WithResponse<GetHousesRequest.Response>
 {
     private readonly IMB_RealtyContext _context;
 
@@ -13,26 +15,30 @@ public class GetHousesEndpoint : BaseAsyncEndpoint.WithoutRequest.WithResponse<G
         _context = context;
     }
 
-    [HttpGet("api/houses")]  // <-- MUST exactly match the client call
-    public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(CancellationToken cancellationToken = default)
+    [HttpGet]
+    public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(
+        CancellationToken cancellationToken = default)
     {
         var houses = await _context.Houses.ToListAsync(cancellationToken);
 
-        var response = new GetHousesRequest.Response(houses.Select(house => new GetHousesRequest.House(
-            house.Id,
-            house.Name,
-            house.Image,
-            house.Location,
-            house.Price,
-            house.Description,
-            house.Bedrooms,
-            house.Bathrooms,
-            house.SquareFeet
-        )));
+        var response = new GetHousesRequest.Response(
+            houses.Select(h => new GetHousesRequest.House(
+                h.Id,
+                h.Name,
+                h.Image,
+                h.Location,
+                h.Price,
+                h.Description,
+                h.Bedrooms,
+                h.Bathrooms,
+                h.SquareFeet
+            )).ToList()
+        );
 
         return Ok(response);
     }
 }
+
 
 
 
