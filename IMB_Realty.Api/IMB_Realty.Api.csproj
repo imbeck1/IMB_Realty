@@ -46,10 +46,11 @@
   </ItemGroup>
 
 <ItemGroup>
-  <None Update="Features\Persistence\Data\Migrations\imbrealty.db">
+  <None Update="wwwroot\Data\imbrealty.db">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
+
 
 
 </Project>
