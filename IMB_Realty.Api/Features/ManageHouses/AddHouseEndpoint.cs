@@ -1,5 +1,4 @@
 using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using IMB_Realty.Api.Persistence;
 using IMB_Realty.Api.Persistence.Data.Entities;
@@ -38,7 +37,7 @@ public class AddHouseEndpoint : BaseAsyncEndpoint.WithRequest<AddHouseRequest>.W
             Bathrooms = request.House.Bathrooms,
             SquareFeet = request.House.SquareFeet,
             Price = request.House.Price,
-            Image = imageBytes
+            Image = imageBytes // Store image as byte[]
         };
 
         await _database.Houses.AddAsync(house, cancellationToken);
@@ -47,4 +46,5 @@ public class AddHouseEndpoint : BaseAsyncEndpoint.WithRequest<AddHouseRequest>.W
         return Ok(house.Id);
     }
 }
+
 
