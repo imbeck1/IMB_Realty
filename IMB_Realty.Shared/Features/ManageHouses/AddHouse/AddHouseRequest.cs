@@ -16,10 +16,6 @@ public class AddHouseRequestValidator : AbstractValidator<AddHouseRequest>
     public AddHouseRequestValidator()
     {
         RuleFor(x => x.House).SetValidator(new HouseValidator());
-
-        // Optional: validate image file
-        RuleFor(x => x.Image)
-            .Must(f => f == null || f.Length > 0)
-            .WithMessage("If provided, the image file must not be empty.");
     }
 }
+
