@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using IMB_Realty.Api.Persistence;
+
 
 public class UploadHouseImageEndpoint : BaseAsyncEndpoint.WithRequest<int>.WithResponse<string>
 {
