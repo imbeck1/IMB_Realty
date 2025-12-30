@@ -12,7 +12,7 @@ public record GetHousesRequest : IRequest<GetHousesRequest.Response>
         string Name,
         string? Image,
         string Location,
-        decimal Price,
+        int Price,
         string Description,
         int Bedrooms,
         int Bathrooms,
