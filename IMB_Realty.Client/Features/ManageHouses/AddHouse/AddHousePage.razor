@@ -14,11 +14,11 @@
 
 @if (_submitSuccessful)
 {
-    <SuccessAlert Message = "Your house has been added successfully!"></SuccessAlert>
+    <SuccessAlert Message="Your house has been added successfully!"></SuccessAlert>
 }
 else if (_errorMessage is not null)
 {
-    <ErrorAlert Message = "@_errorMessage"></ErrorAlert>
+    <ErrorAlert Message="@_errorMessage"></ErrorAlert>
 }
 
 <HouseForm @ref="_houseForm" OnSubmit="SubmitNewHouse" />
@@ -30,16 +30,22 @@ else if (_errorMessage is not null)
 
     private async Task SubmitNewHouse(HouseDto house, IBrowserFile? image)
     {
-        var response = await Mediator.Send(new AddHouseRequest(house));
+        // Create AddHouseRequest for API
+        var request = new AddHouseRequest(house);
 
-        if(response.HouseId == -1)
+        // Send house data to API
+        var response = await Mediator.Send(request);
+
+        if (response.HouseId == -1)
         {
             _submitSuccessful = false;
             _errorMessage = "There was a problem saving your house.";
             StateHasChanged();
             return;
         }
-        if(image is null)
+
+        // If no image, just show success
+        if (image is null)
         {
             _submitSuccessful = true;
             _houseForm.ResetForm();
@@ -47,24 +53,28 @@ else if (_errorMessage is not null)
             return;
         }
 
+        // Upload image
         _submitSuccessful = await ProcessImage(response.HouseId, image);
 
-        if(_submitSuccessful)
+        if (_submitSuccessful)
         {
             _houseForm.ResetForm();
         }
+
         StateHasChanged();
     }
 
     private async Task<bool> ProcessImage(int houseId, IBrowserFile houseImage)
     {
-        var imageUploadResonse = await Mediator.Send(new UploadHouseImageRequest(houseId, houseImage));
+        var imageUploadResponse = await Mediator.Send(new UploadHouseImageRequest(houseId, houseImage));
 
-        if(string.IsNullOrWhiteSpace(imageUploadResonse.ImageName))
+        if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
         {
             _errorMessage = "Your house was saved, but there was a problem uploading the image.";
             return false;
         }
+
         return true;
     }
 }
+
