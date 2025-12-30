@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace IMB_Realty.Api.Features.Persistence.Data
+namespace IMB_Realty.Api.Features.Persistence
 {
     public class IMB_RealtyContext : DbContext
     {
