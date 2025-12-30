@@ -1,0 +1,13 @@
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\bin\Release\net6.0\IMB_Realty.Shared.deps.json
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\bin\Release\net6.0\IMB_Realty.Shared.dll
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\bin\Release\net6.0\IMB_Realty.Shared.pdb
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.csproj.AssemblyReference.cache
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.AssemblyInfoInputs.cache
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.AssemblyInfo.cs
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.sourcelink.json
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.dll
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\refint\IMB_Realty.Shared.dll
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\IMB_Realty.Shared.pdb
+C:\Users\Isaac\Desktop\github proj\IMB_Realty\IMB_Realty.Shared\obj\Release\net6.0\ref\IMB_Realty.Shared.dll

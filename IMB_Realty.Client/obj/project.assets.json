@@ -2106,11 +2106,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
+      "projectUniqueName": "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
       "projectName": "IMB_Realty.Client",
-      "projectPath": "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
+      "projectPath": "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
       "packagesPath": "C:\\Users\\Isaac\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Client\\obj\\",
+      "outputPath": "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Isaac\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2125,8 +2125,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Shared\\IMB_Realty.Shared.csproj": {
-              "projectPath": "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Shared\\IMB_Realty.Shared.csproj"
+            "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Shared\\IMB_Realty.Shared.csproj": {
+              "projectPath": "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Shared\\IMB_Realty.Shared.csproj"
             }
           }
         }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VmpO9781W34=",
+  "dgSpecHash": "4ed3234ciYc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Isaac\\Desktop\\blazorProject\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
+  "projectFilePath": "C:\\Users\\Isaac\\Desktop\\github proj\\IMB_Realty\\IMB_Realty.Client\\IMB_Realty.Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Isaac\\.nuget\\packages\\blazored.fluentvalidation\\2.0.1\\blazored.fluentvalidation.2.0.1.nupkg.sha512",
     "C:\\Users\\Isaac\\.nuget\\packages\\fluentvalidation\\10.3.3\\fluentvalidation.10.3.3.nupkg.sha512",
