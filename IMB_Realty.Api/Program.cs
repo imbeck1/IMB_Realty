@@ -6,19 +6,20 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --------------------
-// Services
-// --------------------
+// Resolve the SQLite DB path relative to the content root
+var dbPath = Path.Combine(
+    builder.Environment.ContentRootPath, 
+    "Features", "Persistence", "Data", "Migrations", "imbrealty.db"
+);
 
 builder.Services.AddDbContext<IMB_RealtyContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
+    options.UseSqlite($"Data Source={dbPath}"));
 
-builder.Services
-    .AddControllers()
-    .AddFluentValidation(fv =>
-        fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
+// Add controllers with FluentValidation
+builder.Services.AddControllers().AddFluentValidation(fv =>
+    fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
-// CORS – allow deployed Blazor frontend
+// Configure CORS for your frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
@@ -32,47 +33,36 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// --------------------
-// Middleware
-// --------------------
-
-// MUST be early
+// Enable CORS before routing
 app.UseCors("AllowClient");
 
-app.UseHttpsRedirection();
-
-// --------------------
-// Static Files (Images)
-// --------------------
-
-// Use ContentRootPath (Azure-safe)
-var imagesPath = Path.Combine(app.Environment.ContentRootPath, "Images");
-
-// ✅ Prevent startup crash
-if (!Directory.Exists(imagesPath))
+if (app.Environment.IsDevelopment())
 {
-    Directory.CreateDirectory(imagesPath);
+    app.UseWebAssemblyDebugging();
 }
 
-app.UseStaticFiles(); // wwwroot (if any)
+app.UseHttpsRedirection();
+app.UseBlazorFrameworkFiles();
 
-app.UseStaticFiles(new StaticFileOptions
+// Serve static files from wwwroot
+app.UseStaticFiles();
+
+// Serve Images folder if it exists
+var imagesFolder = Path.Combine(builder.Environment.ContentRootPath, "Images");
+if (Directory.Exists(imagesFolder))
 {
-    FileProvider = new PhysicalFileProvider(imagesPath),
-    RequestPath = "/Images"
-});
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(imagesFolder),
+        RequestPath = "/Images"
+    });
+}
 
 app.UseRouting();
 
-// --------------------
-// Endpoints
-// --------------------
-
 app.MapControllers();
-
-// ❌ DO NOT use Blazor middleware in API
-// app.UseBlazorFrameworkFiles();
-// app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("index.html");
 
 app.Run();
+
 
