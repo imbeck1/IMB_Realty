@@ -6,20 +6,25 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+// --------------------
+// Services
+// --------------------
+
 builder.Services.AddDbContext<IMB_RealtyContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IMB_RealtyContext")));
 
-builder.Services.AddControllers().AddFluentValidation(fv =>
-    fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
+builder.Services
+    .AddControllers()
+    .AddFluentValidation(fv =>
+        fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
-// Configure CORS for your deployed frontend
+// CORS – allow deployed Blazor frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
     {
         policy
-            .WithOrigins("https://lively-water-0aff8551e.2.azurestaticapps.net") // frontend URL
+            .WithOrigins("https://lively-water-0aff8551e.2.azurestaticapps.net")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -27,27 +32,47 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Enable CORS before routing
+// --------------------
+// Middleware
+// --------------------
+
+// MUST be early
 app.UseCors("AllowClient");
 
-if (app.Environment.IsDevelopment())
+app.UseHttpsRedirection();
+
+// --------------------
+// Static Files (Images)
+// --------------------
+
+// Use ContentRootPath (Azure-safe)
+var imagesPath = Path.Combine(app.Environment.ContentRootPath, "Images");
+
+// ✅ Prevent startup crash
+if (!Directory.Exists(imagesPath))
 {
-    app.UseWebAssemblyDebugging();
+    Directory.CreateDirectory(imagesPath);
 }
 
-app.UseHttpsRedirection();
-app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions()
+app.UseStaticFiles(); // wwwroot (if any)
+
+app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    FileProvider = new PhysicalFileProvider(imagesPath),
     RequestPath = "/Images"
 });
 
 app.UseRouting();
 
+// --------------------
+// Endpoints
+// --------------------
+
 app.MapControllers();
-app.MapFallbackToFile("index.html");
+
+// ❌ DO NOT use Blazor middleware in API
+// app.UseBlazorFrameworkFiles();
+// app.MapFallbackToFile("index.html");
 
 app.Run();
 
