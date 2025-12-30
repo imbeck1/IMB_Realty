@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest;
 using IMB_Realty.Api.Persistence;
 
-
 namespace IMB_Realty.Api.Features.Home.Shared
 {
     [Route("api/houses")]
@@ -23,17 +22,15 @@ namespace IMB_Realty.Api.Features.Home.Shared
         public override async Task<ActionResult<GetHousesRequest.Response>> HandleAsync(
             CancellationToken cancellationToken = default)
         {
-            // Fetch houses safely
             var houses = await _context.Houses
-                .AsNoTracking() // faster for read-only
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-            // If no houses exist, return empty list
             var response = new GetHousesRequest.Response(
                 houses.Select(h => new GetHousesRequest.House(
                     h.Id,
-                    h.Name ?? string.Empty,          // avoid nulls
-                    h.Image,                         // nullable
+                    h.Name ?? string.Empty,
+                    h.Image != null ? Convert.ToBase64String(h.Image) : null, // Convert byte[] to Base64
                     h.Location ?? string.Empty,
                     h.Price,
                     h.Description ?? string.Empty,
@@ -47,6 +44,7 @@ namespace IMB_Realty.Api.Features.Home.Shared
         }
     }
 }
+
 
 
 
