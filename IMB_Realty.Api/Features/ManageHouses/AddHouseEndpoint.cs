@@ -1,7 +1,9 @@
 using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using IMB_Realty.Api.Persistence;
-
+using IMB_Realty.Api.Persistence.Data.Entities;
+using System.IO;
 
 namespace IMB_Realty.Api.Features.ManageHouses;
 
@@ -17,6 +19,16 @@ public class AddHouseEndpoint : BaseAsyncEndpoint.WithRequest<AddHouseRequest>.W
     [HttpPost(AddHouseRequest.RouteTemplate)]
     public override async Task<ActionResult<int>> HandleAsync(AddHouseRequest request, CancellationToken cancellationToken = default)
     {
+        byte[]? imageBytes = null;
+
+        // Convert uploaded image to byte array
+        if (request.Image != null && request.Image.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await request.Image.CopyToAsync(memoryStream, cancellationToken);
+            imageBytes = memoryStream.ToArray();
+        }
+
         var house = new House
         {
             Name = request.House.Name,
@@ -25,13 +37,14 @@ public class AddHouseEndpoint : BaseAsyncEndpoint.WithRequest<AddHouseRequest>.W
             Bedrooms = request.House.Bedrooms,
             Bathrooms = request.House.Bathrooms,
             SquareFeet = request.House.SquareFeet,
-            Price = request.House.Price
+            Price = request.House.Price,
+            Image = imageBytes
         };
 
         await _database.Houses.AddAsync(house, cancellationToken);
-
         await _database.SaveChangesAsync(cancellationToken);
 
         return Ok(house.Id);
     }
 }
+
