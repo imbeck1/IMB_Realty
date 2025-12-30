@@ -1,33 +1,23 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-
+//using Microsoft.AspNetCore.Http;
 namespace IMB_Realty.Shared.Features.ManageHouses;
 
 public class HouseDto
 {
     public int Id { get; set; }
-
     public string Name { get; set; } = "";
-
     public string Description { get; set; } = "";
-
     public int Price { get; set; }
-
     public string Location { get; set; } = "";
-
     public int Bedrooms { get; set; }
-
     public int Bathrooms { get; set; }
-
     public int SquareFeet { get; set; }
 
-    // Image file uploaded by the user
-    public IFormFile? ImageFile { get; set; }
+    // Removed IFormFile from Shared project
+    // Image is stored as Base64 string or bytes in API
+    public string? ImageBase64 { get; set; } 
 
-    // Optional base64 representation for displaying existing images
-    public string? ImageBase64 { get; set; }
-
-    public ImageAction ImageAction { get; set; } = ImageAction.None;
+    public ImageAction ImageAction { get; set; }
 }
 
 public enum ImageAction
@@ -36,6 +26,7 @@ public enum ImageAction
     Add,
     Remove
 }
+
 
 public class HouseValidator : AbstractValidator<HouseDto>
 {
