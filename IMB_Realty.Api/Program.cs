@@ -8,10 +8,14 @@ using IMB_Realty.Api.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Data", "imbrealty.db");
-builder.Services.AddDbContext<IMB_RealtyContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
 
+// ----------------------------
+// Use Azure SQL instead of SQLite
+// ----------------------------
+builder.Services.AddDbContext<IMB_RealtyContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add controllers and FluentValidation
 builder.Services.AddControllers().AddFluentValidation(fv =>
     fv.RegisterValidatorsFromAssembly(Assembly.Load("IMB_Realty.Shared")));
 
@@ -37,9 +41,12 @@ if (app.Environment.IsDevelopment())
     app.UseWebAssemblyDebugging();
 }
 
+// HTTPS redirection and Blazor static files
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+
+// Serve wwwroot/Data folder
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Data")),
@@ -51,6 +58,7 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
 
 
 
