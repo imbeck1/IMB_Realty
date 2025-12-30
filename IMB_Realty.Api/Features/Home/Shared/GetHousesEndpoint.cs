@@ -2,6 +2,8 @@ using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IMB_Realty.Shared.Features.Home.Shared.GetHousesRequest;
+using IMB_Realty.Api.Persistence;
+
 
 namespace IMB_Realty.Api.Features.Home.Shared
 {
